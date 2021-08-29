@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class CircularUsageIndicator extends StatelessWidget {
-  final double progressValue;
-  final double size;
-  final Color backgroundColor;
-  final Color progressColor;
-  final Color borderColor;
-  final TextStyle progressLabelStyle;
-  final double borderWidth;
-  final List<Widget> children;
-  final double elevation;
+  final double? progressValue;
+  final double? size;
+  final Color? backgroundColor;
+  final Color? progressColor;
+  final Color? borderColor;
+  final TextStyle? progressLabelStyle;
+  final double? borderWidth;
+  final List<Widget>? children;
+  final double? elevation;
 
   CircularUsageIndicator({
     this.progressValue = 0.0,
@@ -30,18 +30,18 @@ class CircularUsageIndicator extends StatelessWidget {
     return Card(
       elevation: elevation,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(size),
+        borderRadius: BorderRadius.circular(size!),
       ),
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: borderColor,
-            width: borderWidth,
+            color: borderColor!,
+            width: borderWidth!,
           ),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(size),
+          borderRadius: BorderRadius.circular(size!),
           child: Container(
             height: size,
             width: size,
@@ -54,26 +54,26 @@ class CircularUsageIndicator extends StatelessWidget {
                     ? Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          height: size * progressValue,
+                          height: size! * progressValue!,
                           color: progressColor,
                         ),
                       )
                     : Wave(
-                        value: progressValue,
-                        color: progressColor,
+                        value: progressValue!,
+                        color: progressColor!,
                         direction: Axis.vertical,
                       ),
                 Scaffold(
                   backgroundColor: Colors.transparent,
                   body: Center(
-                    child: children.length == 0
+                    child: children!.length == 0
                         ? Text(
-                            '${(progressValue * 100).round()} %',
+                            '${(progressValue! * 100).round()} %',
                             style: progressLabelStyle,
                           )
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: children,
+                            children: children!,
                           ),
                   ),
                 )
@@ -87,12 +87,12 @@ class CircularUsageIndicator extends StatelessWidget {
 }
 
 class Wave extends StatefulWidget {
-  final double value;
-  final Color color;
-  final Axis direction;
+  final double? value;
+  final Color? color;
+  final Axis? direction;
 
   const Wave({
-    Key key,
+    Key? key,
     @required this.value,
     @required this.color,
     @required this.direction,
@@ -103,7 +103,7 @@ class Wave extends StatefulWidget {
 }
 
 class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  AnimationController? _animationController;
 
   @override
   void initState() {
@@ -113,12 +113,12 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
       vsync: this,
       duration: Duration(seconds: 2),
     );
-    _animationController.repeat();
+    _animationController!.repeat();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _animationController!.dispose();
     super.dispose();
   }
 
@@ -126,7 +126,7 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: CurvedAnimation(
-        parent: _animationController,
+        parent: _animationController!,
         curve: Curves.easeInOut,
       ),
       builder: (context, child) => ClipPath(
@@ -134,9 +134,9 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
           color: widget.color,
         ),
         clipper: _WaveClipper(
-          animationValue: _animationController.value,
-          value: widget.value,
-          direction: widget.direction,
+          animationValue: _animationController!.value,
+          value: widget.value!,
+          direction: widget.direction!,
         ),
       ),
     );
@@ -144,9 +144,9 @@ class _WaveState extends State<Wave> with SingleTickerProviderStateMixin {
 }
 
 class _WaveClipper extends CustomClipper<Path> {
-  final double animationValue;
-  final double value;
-  final Axis direction;
+  final double? animationValue;
+  final double? value;
+  final Axis? direction;
 
   _WaveClipper({
     @required this.animationValue,
@@ -177,9 +177,9 @@ class _WaveClipper extends CustomClipper<Path> {
     final waveList = <Offset>[];
     for (int i = -2; i <= size.height.toInt() + 2; i++) {
       final waveHeight = (size.width / 20);
-      final dx = math.sin((animationValue * 360 - i) % 360 * (math.pi / 180)) *
+      final dx = math.sin((animationValue! * 360 - i) % 360 * (math.pi / 180)) *
               waveHeight +
-          (size.width * value);
+          (size.width * value!);
       waveList.add(Offset(dx, i.toDouble()));
     }
     return waveList;
@@ -189,9 +189,9 @@ class _WaveClipper extends CustomClipper<Path> {
     final waveList = <Offset>[];
     for (int i = -2; i <= size.width.toInt() + 2; i++) {
       final waveHeight = (size.height / 20);
-      final dy = math.sin((animationValue * 360 - i) % 360 * (math.pi / 180)) *
+      final dy = math.sin((animationValue! * 360 - i) % 360 * (math.pi / 180)) *
               waveHeight +
-          (size.height - (size.height * value));
+          (size.height - (size.height * value!));
       waveList.add(Offset(i.toDouble(), dy));
     }
     return waveList;
